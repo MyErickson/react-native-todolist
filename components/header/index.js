@@ -5,9 +5,10 @@ import { style } from './style'
 
 const Header = ( ) => {
     return(
-        <View style={style.subHeader}>
-            <View>
-                 <Text> Hello erickson</Text>
+        <View >
+            <View style={style.subHeader}/>
+            <View style= {style.header}> 
+                 <Text style={style.text}> Hello erickson</Text>
             </View>
 
         </View>
