@@ -4,6 +4,7 @@ import {Text, View , ScrollView } from 'react-native';
 import  Header  from './components/header';
 import TaskList from './components/task-list';
 import ButtonAddTask from './components/button-add-task'
+import MenuTask from './components/menu-task';
 
 const list = [
   {
@@ -70,11 +71,15 @@ const list = [
 ];
 export default class App extends Component {
   state = {
-    myText: 'Robert'
+    myText: 'Robert',
+    isVisible:false
   }
 
   handleOnPress = () =>{
     this.setState({myText: 'erickson'})
+  }
+  onDisapearCallBack=()=>{
+      this.setState({isVisible:!this.state.isVisible})
   }
   render() {
     return (
@@ -82,9 +87,15 @@ export default class App extends Component {
     
             <Header  />
             <ScrollView>
-              <TaskList taskList={list}/>
+              <TaskList 
+              taskList={list}
+              onDisapearCallBack={this.onDisapearCallBack}
+              />
             </ScrollView>
-           
+            <MenuTask 
+            isVisible={this.state.isVisible}
+            onDisapearCallBack={this.onDisapearCallBack}
+            />
             <ButtonAddTask />
       </View>
   
