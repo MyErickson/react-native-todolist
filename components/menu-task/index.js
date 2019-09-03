@@ -5,7 +5,7 @@ import Modal from 'react-native-modal';
 
 import { style } from './style';
 
-const MenuTask = ({isVisible,onDisapearCallBack}) => {
+const MenuTask = ({isVisible,onDisapearCallBack, onDeleteCallBack , onChangeStatusCallBack}) => {
 
  
 
@@ -31,12 +31,12 @@ const MenuTask = ({isVisible,onDisapearCallBack}) => {
                                     <Button
                                     buttonStyle={style.buttonDelete}
                                     title="Supprimer"
-                                    onPress={()=> onDisapearCallBack()}
+                                    onPress={()=> onDeleteCallBack()}
                                     />
                                     <Button
                                     buttonStyle={style.buttonChangeStatus}
                                     title="Changer Status"
-                                    onPress={()=> onDisapearCallBack()}
+                                    onPress={()=> onChangeStatusCallBack()}
                                     />
                                     
                             </View>

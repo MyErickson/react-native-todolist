@@ -10,7 +10,7 @@ const TaskList = ({taskList,onDisapearCallBack}) => {
             <ListItem 
                 key={task.id}
                 title={task.title}
-                onPress={()=>onDisapearCallBack()}
+                onPress={()=>onDisapearCallBack(task)}
                 badge={
 
                     {  value :task.status,
