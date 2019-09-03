@@ -7,79 +7,19 @@ import ButtonAddTask from './components/button-add-task';
 import MenuTask from './components/menu-task';
 import lodash from 'lodash';
 import { TASK  } from './models';
+import TextPrompt from './components/text-prompt';
 
 
 
-
-const taskList = [
-  {
-    id:1,
-    title: 'Faire le mengage',
-    status: 'En cours'
-  },
-  {
-    id:2,
-    title: 'Faire la vaiselle',
-    status: 'En cours'
-  },
-  {
-    id:3,
-    title: 'Promener le chien',
-    status: 'Terminé'
-  },
-  {
-    id:4,
-    title: 'Faire le mengage',
-    status: 'En cours'
-  },
-  {
-    id:5,
-    title: 'Faire la vaiselle',
-    status: 'En cours'
-  },
-  {
-    id:6,
-    title: 'Promener le chien',
-    status: 'Terminé'
-  },
-  {
-    id:7,
-    title: 'Faire le mengage',
-    status: 'En cours'
-  },
-  {
-    id:8,
-    title: 'Faire la vaiselle',
-    status: 'En cours'
-  },
-  {
-    id:9,
-    title: 'Promener le chien',
-    status: 'Terminé'
-  },
-  {
-    id:10,
-    title: 'Faire le mengage',
-    status: 'En cours'
-  },
-  {
-    id:11,
-    title: 'Faire la vaiselle',
-    status: 'En cours'
-  },
-  {
-    id:12,
-    title: 'Promener le chien',
-    status: 'Terminé'
-  },
-
-];
 export default class App extends Component {
   state = {
     myText: 'Robert',
-    taskList,
+    taskList:[],
     isVisible:false,
-    currentTask:{}
+    currentTask:{},
+    isAddPromptVisible:false,
+    isRenamePromptVisible:false,
+    generator:0,
   }
 
   handleOnPress = () =>{
@@ -126,9 +66,60 @@ export default class App extends Component {
       this.setState({
         taskList:updatedTaskList,
         isVisible:false,
-        currentTask:{}
+        currentTask:{},
+    
       })
 
+  }
+  hideAddPrompt = ()=>{
+    this.setState({isAddPromptVisible:false})
+  }
+  hideRenamePrompt = ()=>{
+    this.setState({isRenamePromptVisible:false, currentTask:{}})
+  }
+
+  onAddTask = value =>{
+    console.log(value)
+      const newTask = {
+        id:this.state.generator,
+        content: value,
+        status: TASK.todoStatus
+      }
+
+      this.setState({
+         taskList:[...this.state.taskList, newTask],
+         isAddPromptVisible:false,
+         generator: this.state.generator + 1
+        })
+  }
+
+
+  onRenameTask=(value)=>{
+    console.log(value)
+    const {currentTask, taskList } = this.state
+    const updatedTask = currentTask;
+
+    updatedTask.content = value;
+
+    const index = lodash.findIndex(taskList, {
+      id: currentTask.id
+    })
+    const updatedTaskList = taskList;
+    updatedTaskList[index] = updatedTask;
+
+    this.setState({
+      taskList:updatedTaskList}, ( )=>{
+        this.hideRenamePrompt()
+      })
+    
+  }
+
+  displayAddPrompt=()=>{
+    this.setState({isAddPromptVisible:true})
+  }
+
+  displayRenameTask =(task)=>{
+    this.setState({currentTask:task , isRenamePromptVisible:true})
   }
 
 
@@ -142,15 +133,36 @@ export default class App extends Component {
               <TaskList 
               taskList={this.state.taskList}
               onDisapearCallBack={this.onDisapearCallBack}
+              onLongPressCallBack={this.displayRenameTask}
               />
             </ScrollView>
             <MenuTask 
-            isVisible={this.state.isVisible}
-            onDisapearCallBack={this.onDisapearCallBack}
-            onDeleteCallBack ={this.deleteCurrentTask}
-            onChangeStatusCallBack = { this.toggletaskStatus }
+              isVisible={this.state.isVisible}
+              onDisapearCallBack={this.onDisapearCallBack}
+              onDeleteCallBack ={this.deleteCurrentTask}
+              onChangeStatusCallBack = { this.toggletaskStatus }
+              
             />
-            <ButtonAddTask />
+            <TextPrompt 
+              isVisible={this.state.isAddPromptVisible}
+              onCancelCallBack={ this.hideAddPrompt}
+              onSubmitCallBack={this.onAddTask }
+              title= 'ajouter une nouvelle tache'
+              placeholder =' ex: faire le menage'
+              defaultValue=''
+              
+              />
+            
+
+            <TextPrompt 
+              isVisible={this.state.isRenamePromptVisible}
+              onCancelCallBack={ this.hideRenamePrompt}
+              onSubmitCallBack={this.onRenameTask }
+              title='renommer la tache'
+              placeholder=''
+              defaultValue={this.state.currentTask.content}
+              />
+            <ButtonAddTask onPresCallBack ={this.displayAddPrompt} />
       </View>
   
     );
